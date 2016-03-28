@@ -1,0 +1,127 @@
+heat_template_version: 2015-04-30
+
+parameters:
+
+  management_network:
+    type: string
+    description: Name of management network to be created
+  left_vn:
+    type: string
+    description: Name of left network to be created
+  right_vn:
+    type: string
+    description: Name of right network to be created
+  left_subnet:
+    type: string
+    description: FQ Name of the left network
+
+  template_VirtualNetwork_1:
+    type: string
+    description: Name of management network to be created
+  template_VirtualNetwork_2:
+    type: string
+    description: Name of left network to be created
+  template_VirtualNetwork_3:
+    type: string
+    description: Name of right network to be created
+
+  svm_name:
+    type: string
+    description: Name of the SVM
+  flavor:
+    type: string
+    description: Flavor of the end VMs
+  image:
+    type: string
+    description: Name of the end VM image
+
+  mirror_traffic_direction:
+    type: string
+    description: Mirror direction
+  analyzer_name:
+      type: string
+      description: Name of the Analyzer Instance
+  analyzer_ip:
+      type: string
+      description: IP of the Analyzer Instance
+  analyzer_ri:
+      type: string
+      description: VN of the Analyzer Instance
+  mirror_udp_port:
+      type: string
+      description: UDP Port of the Analyzer Instance
+
+resources:
+
+  template_VirtualMachineInterface_1:
+    type: OS::Contrail::VirtualMachineInterface
+    properties:
+      virtual_machine_interface_properties:
+        {
+          virtual_machine_interface_properties_service_interface_type: { get_param: template_VirtualNetwork_1 },
+        }
+      virtual_network_refs: { get_param: management_network }
+
+  template_VirtualMachineInterface_2:
+    type: OS::Contrail::VirtualMachineInterface
+    properties:
+      virtual_machine_interface_properties:
+        {
+          virtual_machine_interface_properties_service_interface_type: { get_param: template_VirtualNetwork_2 },
+          virtual_machine_interface_properties_interface_mirror:
+            {
+              virtual_machine_interface_properties_interface_mirror_traffic_direction: { get_param: mirror_traffic_direction },
+              virtual_machine_interface_properties_interface_mirror_mirror_to:
+                {
+                  virtual_machine_interface_properties_interface_mirror_mirror_to_analyzer_name: { get_param: analyzer_name },
+                  virtual_machine_interface_properties_interface_mirror_mirror_to_analyzer_ip_address: { get_param: analyzer_ip },
+                  virtual_machine_interface_properties_interface_mirror_mirror_to_udp_port: { get_param: mirror_udp_port },
+                  virtual_machine_interface_properties_interface_mirror_mirror_to_routing_instance: { get_param: analyzer_ri },
+                },
+            },
+        }
+      virtual_network_refs: { get_param: left_vn }
+
+
+  template_VirtualMachineInterface_3:
+    type: OS::Contrail::VirtualMachineInterface
+    properties:
+      virtual_machine_interface_properties:
+        {
+          virtual_machine_interface_properties_service_interface_type: { get_param: template_VirtualNetwork_3 },
+        }
+      virtual_network_refs: { get_param: right_vn }
+
+  template_InstanceIp_1:
+    type: OS::Contrail::InstanceIp
+    depends_on: [ template_VirtualMachineInterface_1 ]
+    properties:
+      virtual_machine_interface_refs: { get_resource: template_VirtualMachineInterface_1 }
+      virtual_network_refs: { get_param: template_VirtualNetwork_1 }
+
+  template_InstanceIp_2:
+    type: OS::Contrail::InstanceIp
+    depends_on: [ template_VirtualMachineInterface_2 ]
+    properties:
+      virtual_machine_interface_refs: { get_resource: template_VirtualMachineInterface_2 }
+      virtual_network_refs: { get_param: template_VirtualNetwork_2 }
+      subnet_uuid: { get_param: left_subnet }
+
+  template_InstanceIp_3:
+    type: OS::Contrail::InstanceIp
+    depends_on: [ template_VirtualMachineInterface_3 ]
+    properties:
+      virtual_machine_interface_refs: { get_resource: template_VirtualMachineInterface_3 }
+      virtual_network_refs: { get_param: template_VirtualNetwork_3 }
+
+  instance:
+    type: OS::Nova::Server
+    depends_on: [ template_InstanceIp_1, template_InstanceIp_2, template_InstanceIp_3 ]
+    properties:
+      name: {get_param: svm_name }
+      image: { get_param:  image }
+      flavor: { get_param: flavor }
+      networks:
+        - port: { get_resource: template_VirtualMachineInterface_1 }
+        - port: { get_resource: template_VirtualMachineInterface_2 }
+        - port: { get_resource: template_VirtualMachineInterface_3 }
