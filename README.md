@@ -45,3 +45,9 @@ contrail-vn-policy-v0.1.yaml
 vn-with-policy.yaml          
 
           - Will create Virtual Network with Network Policy
+
+contrail-vm-port-mirror.yaml
+          
+          - Will creates 2 nova VM using existing VN’s 
+          - Will enables port mirroring for left interface to and existing analyzer as SI with shared IP
+
