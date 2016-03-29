@@ -14,9 +14,7 @@ parameters:
   left_vn:
     type: string
     description: Name of left network to be created
-  right_vn:
-    type: string
-    description: Name of right network to be created
+
   template_VirtualNetwork_1:
     type: string
     description: Name of management network to be created
