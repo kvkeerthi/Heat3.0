@@ -56,3 +56,10 @@ contrail-mirror-sc-template-V2.yaml
           - Will creates nova vm using existing VN's
           - Will creates v2 template
           - Will creates SI with shared IP using v2 Template for Left interface
+
+contrail-sc-static-route-v2.yaml
+
+          - Will creates 2 nova vm using existing VN's
+          - Will creates v2 template
+          - Will creates SI with shared IP using v2 Template
+          - Will create Interface Route Tables Route Prefix and route will be attached to right interface of the SI
