@@ -73,7 +73,7 @@ contrail-sc-static-route-v2.yaml
     - Will creates SI with shared IP using v2 Template
     - Will create Interface Route Tables Route Prefix and route will be attached to right interface of the SI
 
-contrail-sc-staticIP-v2.env
+contrail-sc-staticIP-v2.yaml
 
     - Will creates 2 nova vm using existing VN's and Static IP for Management Port
     - Will creates v2 template
