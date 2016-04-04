@@ -72,3 +72,10 @@ contrail-sc-static-route-v2.yaml
     - Will creates v2 template
     - Will creates SI with shared IP using v2 Template
     - Will create Interface Route Tables Route Prefix and route will be attached to right interface of the SI
+
+contrail-sc.env
+
+    - Will creates Mangement,Left,Right VN's
+    - Will creates v1 template
+    - Will creates SI with shared IP & Static-Route using v1 Template
+    - Will create and attach NW Policy for LEFT and RIGHT VN's.
