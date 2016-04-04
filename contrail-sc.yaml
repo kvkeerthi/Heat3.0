@@ -1,0 +1,418 @@
+heat_template_version: 2015-04-30
+
+description: >
+  HOT template to creates a virtual network with one subnet each.
+  set allow-transit, forwarding_mode and route-targets
+parameters:
+  virtual_net_1_name:
+    type: string
+    description: Name of private network to be created
+  virtual_net_1_prefix_1:
+    type: string
+    description: Private network address prefix
+  virtual_net_1_gateway_1:
+    type: string
+    description: Private network address prefix
+  virtual_net_1_prefix_len_1:
+    type: string
+    description: Private network address prefix len
+  virtual_net_1_virtual_network_properties_rpf:
+    type: string
+    description: rpf for the VirtualNetwork
+  virtual_net_1_is_shared:
+    type: boolean
+    description: is_shared for the VirtualNetwork
+  virtual_net_1_forwarding_mode:
+    type: string
+    description: Private network forwarding_mode
+  virtual_net_1_is_enable_dhcp:
+    type: boolean
+    description: enable_dhcp for the VirtualNetwork
+  virtual_net_1_pools_start_1:
+    type: string
+    description: start for the VirtualNetwork
+  virtual_net_1_pools_end_1:
+    type: string
+    description: end for the VirtualNetwork
+  virtual_net_1_route_target_1:
+    type: string
+    description: Private network route-target
+  virtual_net_1_project:
+    type: string
+    description: project for the VirtualNetwork
+  virtual_net_1_vn_policy:
+    type: string
+    description: Property for Network Policy
+
+  virtual_net_2_name:
+    type: string
+    description: Name of private network to be created
+  virtual_net_2_prefix_1:
+    type: string
+    description: Private network address prefix
+  virtual_net_2_gateway_1:
+    type: string
+    description: Private network address prefix
+  virtual_net_2_prefix_len_1:
+    type: string
+    description: Private network address prefix len
+  virtual_net_2_virtual_network_properties_rpf:
+    type: string
+    description: rpf for the VirtualNetwork
+  virtual_net_2_is_shared:
+    type: boolean
+    description: is_shared for the VirtualNetwork
+  virtual_net_2_forwarding_mode:
+    type: string
+    description: Private network forwarding_mode
+  virtual_net_2_is_enable_dhcp:
+    type: boolean
+    description: enable_dhcp for the VirtualNetwork
+  virtual_net_2_pools_start_1:
+    type: string
+    description: start for the VirtualNetwork
+  virtual_net_2_pools_end_1:
+    type: string
+    description: end for the VirtualNetwork
+  virtual_net_2_route_target_1:
+    type: string
+    description: Private network route-target
+  virtual_net_2_project:
+    type: string
+    description: project for the VirtualNetwork
+  virtual_net_2_vn_policy:
+    type: string
+    description: Property for Network Policy
+
+# Policy parameters
+  policy_name:
+    type: string
+    description: Name of the Policy
+  policy_fq_name:
+    type: string
+    description: FQDN of the Policy
+  simple_action:
+    type: string
+    description: Pass or Deny
+  apply_service:
+    type: string
+    description: apply_service for the NetworkPolicy
+  protocol:
+    type: string
+    description: Protocol
+  src_port_end:
+    type: number
+    description: End of the Source Port Range
+  src_port_start:
+    type: number
+    description: Start of the Source Port Range
+  direction:
+    type: string
+    description: Direction of the Policy
+  dst_port_end:
+    type: number
+    description: End of the Destination Port Range
+  dst_port_start:
+    type: number
+    description: Start of the Destination Port Range
+# VN Parameters
+  left_vn_fqdn:
+    type: string
+    description: FQ Name of the left network
+  right_vn_fqdn:
+    type: string
+    description: FQ Name of the left network
+
+  service_template_name:
+    type: string
+    label: Service template fq name
+    description: Service template for port tuple
+  service_template_properties_version:
+    type: string
+    description: Indicates service version
+  service_template_properties_service_mode:
+    type: string
+    description: service mode
+  service_template_properties_service_type:
+    type: string
+    description: service type
+  service_template_properties_image_name:
+    type: string
+    description: Name of the image
+  service_template_properties_flavor:
+    type: string
+    description: Flavor
+  service_template_properties_ordered_interfaces:
+    type: string
+    description: Indicates service interfaces are ordered
+  service_template_properties_interface_type_service_interface_type_1:
+    type: string
+    description: service_interface_type for the ServiceTemplate
+  service_template_properties_interface_type_shared_ip_1:
+    type: boolean
+    description: shared_ip for the ServiceTemplate
+  service_template_properties_interface_type_static_route_enable_1:
+    type: boolean
+    description: static_route_enable for the ServiceTemplate
+  service_template_properties_interface_type_service_interface_type_2:
+    type: string
+    description: service_interface_type for the ServiceTemplate
+  service_template_properties_interface_type_shared_ip_2:
+    type: boolean
+    description: shared_ip for the ServiceTemplate
+  service_template_properties_interface_type_static_route_enable_2:
+    type: boolean
+    description: static_route_enable for the ServiceTemplate
+  service_template_properties_interface_type_service_interface_type_3:
+    type: string
+    description: service_interface_type for the ServiceTemplate
+  service_template_properties_interface_type_shared_ip_3:
+    type: boolean
+    description: shared_ip for the ServiceTemplate
+  service_template_properties_interface_type_static_route_enable_3:
+    type: boolean
+    description: static_route_enable for the ServiceTemplate
+  service_template_properties_availability_zone_enable:
+    type: string
+    description: Indicates availability zone is enabled
+  service_template_properties_service_virtualization_type:
+    type: string
+    description: Indicates virtualization type
+  service_instance_name:
+    type: string
+    label: Service instance fq name
+    description: Service instance for port tuple
+  management_network:
+    type: string
+    description: Name of management network to be created
+  left_network:
+    type: string
+    description: Name of left network to be created
+  right_network:
+    type: string
+    description: Name of right network to be created
+  route_prefix_1_0:
+    type: string
+    description: prefix for the ServiceInstance
+  route_prefix_1_1:
+    type: string
+    description: prefix for the ServiceInstance
+  availability_zone:
+    type: string
+    description: availability zone in form of Zone:Host
+  max_num_si_instances:
+    type: number
+    description: maximum number of firewall instances for scaling
+  si_scaling:
+    type: string
+    description: Indicates whether service scaling is enabled
+  domain:
+    type: string
+    description: Name of the Domain
+  project:
+    type: string
+    description: project for the ServiceInstance
+  fq_name:
+    type: string
+    description: fq_name for the ServiceInstance
+
+
+resources:
+
+  template_NetworkIpam_1:
+    type: OS::Contrail::NetworkIpam
+    properties:
+      name: { get_param: virtual_net_1_name }
+  
+  template_NetworkIpam_2:
+    type: OS::Contrail::NetworkIpam
+    properties:
+      name: { get_param: virtual_net_2_name }
+
+  template_VirtualNetwork_1:
+    type: OS::Contrail::VirtualNetwork
+    properties:
+      name: { get_param: virtual_net_1_name }
+      is_shared: { get_param: virtual_net_1_is_shared }
+      network_policy_refs: { get_param: virtual_net_1_vn_policy }
+      network_policy_refs_data:
+        {
+          network_policy_refs_data_sequence:
+            {
+              network_policy_refs_data_sequence_major: 0,
+              network_policy_refs_data_sequence_minor: 0,
+            },
+        }
+      virtual_network_properties:
+        {
+          virtual_network_properties_forwarding_mode: { get_param: virtual_net_1_forwarding_mode },
+          virtual_network_properties_rpf: { get_param: virtual_net_1_virtual_network_properties_rpf },
+        }
+      route_target_list:
+        {
+          route_target_list_route_target: [{ get_param: virtual_net_1_route_target_1 }],
+        }
+      network_ipam_refs: { get_resource: template_NetworkIpam_1 }
+      network_ipam_refs_data:
+        {
+          network_ipam_refs_data_ipam_subnets:
+            [
+              {
+              network_ipam_refs_data_ipam_subnets_subnet:
+                {
+                  network_ipam_refs_data_ipam_subnets_subnet_ip_prefix: { get_param: virtual_net_1_prefix_1 },
+                  network_ipam_refs_data_ipam_subnets_subnet_ip_prefix_len: { get_param: virtual_net_1_prefix_len_1 },
+                },
+              network_ipam_refs_data_ipam_subnets_allocation_pools:
+                [{
+                  network_ipam_refs_data_ipam_subnets_allocation_pools_start: { get_param: virtual_net_1_pools_start_1 },
+                  network_ipam_refs_data_ipam_subnets_allocation_pools_end: { get_param: virtual_net_1_pools_end_1 },
+                }],
+              network_ipam_refs_data_ipam_subnets_default_gateway: { get_param: virtual_net_1_gateway_1 }
+              },
+            ]
+         }
+
+  template_VirtualNetwork_2:
+    type: OS::Contrail::VirtualNetwork
+    properties:
+      name: { get_param: virtual_net_2_name }
+      is_shared: { get_param: virtual_net_2_is_shared }
+      network_policy_refs: { get_param: virtual_net_2_vn_policy }
+      network_policy_refs_data:
+        {
+          network_policy_refs_data_sequence:
+            {
+              network_policy_refs_data_sequence_major: 0,
+              network_policy_refs_data_sequence_minor: 0,
+            },
+        }
+      virtual_network_properties:
+        {
+          virtual_network_properties_forwarding_mode: { get_param: virtual_net_2_forwarding_mode },
+          virtual_network_properties_rpf: { get_param: virtual_net_2_virtual_network_properties_rpf },
+        }
+      route_target_list:
+        {
+          route_target_list_route_target: [{ get_param: virtual_net_2_route_target_1 }],
+        }
+      network_ipam_refs: { get_resource: template_NetworkIpam_2 }
+      network_ipam_refs_data:
+        {
+          network_ipam_refs_data_ipam_subnets:
+            [
+              {
+              network_ipam_refs_data_ipam_subnets_subnet:
+                {
+                  network_ipam_refs_data_ipam_subnets_subnet_ip_prefix: { get_param: virtual_net_2_prefix_1 },
+                  network_ipam_refs_data_ipam_subnets_subnet_ip_prefix_len: { get_param: virtual_net_2_prefix_len_1 },
+                },
+              network_ipam_refs_data_ipam_subnets_allocation_pools:
+                [{
+                  network_ipam_refs_data_ipam_subnets_allocation_pools_start: { get_param: virtual_net_2_pools_start_1 },
+                  network_ipam_refs_data_ipam_subnets_allocation_pools_end: { get_param: virtual_net_2_pools_end_1 },
+                }],
+              network_ipam_refs_data_ipam_subnets_default_gateway: { get_param: virtual_net_2_gateway_1 }
+              },
+            ]
+         }
+
+  template_NetworkPolicy:
+    type: OS::Contrail::NetworkPolicy
+    properties:
+      name: { get_param: policy_name }
+      network_policy_entries:  {
+          network_policy_entries_policy_rule: [{
+                network_policy_entries_policy_rule_direction: { get_param: direction },
+                network_policy_entries_policy_rule_protocol: { get_param: protocol },
+                network_policy_entries_policy_rule_src_ports: [{
+                        network_policy_entries_policy_rule_src_ports_start_port: { get_param: src_port_start },
+                        network_policy_entries_policy_rule_src_ports_end_port: { get_param: src_port_end }
+                                                              }],
+                network_policy_entries_policy_rule_dst_ports: [{
+                        network_policy_entries_policy_rule_dst_ports_start_port: { get_param: dst_port_start },
+                        network_policy_entries_policy_rule_dst_ports_end_port: { get_param: dst_port_end }
+                                                              }],
+                network_policy_entries_policy_rule_dst_addresses: [{
+                        network_policy_entries_policy_rule_dst_addresses_virtual_network: { get_param: right_vn_fqdn }
+                                                              }],
+                network_policy_entries_policy_rule_src_addresses: [{
+                        network_policy_entries_policy_rule_src_addresses_virtual_network: { get_param: left_vn_fqdn }
+                                                              }],
+                network_policy_entries_policy_rule_action_list: {
+                        network_policy_entries_policy_rule_action_list_simple_action: { get_param: simple_action },
+                        network_policy_entries_policy_rule_action_list_apply_service: [{ get_param: apply_service }],
+                                                                }
+                                                }],
+                               }
+  template_ServiceTemplate:
+    type: OS::Contrail::ServiceTemplate
+    properties:
+      name: { get_param: service_template_name }
+      service_template_properties:
+        {
+          service_template_properties_version: { get_param: service_template_properties_version },
+          service_template_properties_service_mode: { get_param: service_template_properties_service_mode },
+          service_template_properties_service_type: { get_param: service_template_properties_service_type },
+          service_template_properties_image_name: { get_param: service_template_properties_image_name },
+          service_template_properties_service_scaling: { get_param: si_scaling },
+          service_template_properties_interface_type:
+            [
+              {
+              service_template_properties_interface_type_service_interface_type: { get_param: service_template_properties_interface_type_service_interface_type_1 },
+              service_template_properties_interface_type_shared_ip: { get_param: service_template_properties_interface_type_shared_ip_1 },
+              service_template_properties_interface_type_static_route_enable: { get_param: service_template_properties_interface_type_static_route_enable_1 },
+              },
+              {
+              service_template_properties_interface_type_service_interface_type: { get_param: service_template_properties_interface_type_service_interface_type_2 },
+              service_template_properties_interface_type_shared_ip: { get_param: service_template_properties_interface_type_shared_ip_2 },
+              service_template_properties_interface_type_static_route_enable: { get_param: service_template_properties_interface_type_static_route_enable_2 },
+              },
+              {
+              service_template_properties_interface_type_service_interface_type: { get_param: service_template_properties_interface_type_service_interface_type_3 },
+              service_template_properties_interface_type_shared_ip: { get_param: service_template_properties_interface_type_shared_ip_3 },
+              service_template_properties_interface_type_static_route_enable: { get_param: service_template_properties_interface_type_static_route_enable_3 },
+              }
+            ],
+          service_template_properties_flavor: { get_param: service_template_properties_flavor },
+          service_template_properties_ordered_interfaces: { get_param: service_template_properties_ordered_interfaces },
+          service_template_properties_service_virtualization_type: { get_param: service_template_properties_service_virtualization_type },
+          service_template_properties_availability_zone_enable: { get_param: service_template_properties_availability_zone_enable },
+        }
+      domain: { get_param: domain }
+
+  template_ServiceInstance:
+    type: OS::Contrail::ServiceInstance
+    properties:
+      name: { get_param: service_instance_name }
+      fq_name: { get_param: fq_name }
+      service_template_refs: { get_resource: template_ServiceTemplate }
+      service_instance_properties:
+        {
+          service_instance_properties_availability_zone: { get_param: availability_zone },
+          service_instance_properties_interface_list:
+            [{
+              service_instance_properties_interface_list_virtual_network: { get_param: management_network },
+             },
+             {
+              service_instance_properties_interface_list_virtual_network: { get_param: left_network },
+             },
+             {
+              service_instance_properties_interface_list_virtual_network: { get_param: right_network },
+              service_instance_properties_interface_list_static_routes:
+                {
+                  service_instance_properties_interface_list_static_routes_route:
+                    [{
+                      service_instance_properties_interface_list_static_routes_route_prefix: { get_param: route_prefix_1_0 },
+                    },
+                    {
+                      service_instance_properties_interface_list_static_routes_route_prefix: { get_param: route_prefix_1_1 },
+                    }],
+                },
+            }],
+      service_instance_properties_scale_out:
+        {
+          service_instance_properties_scale_out_max_instances: { get_param: max_num_si_instances },
+        },
+        }
+      project: { get_param: project }
