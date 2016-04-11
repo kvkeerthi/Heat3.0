@@ -85,3 +85,10 @@ contrail-sc.env
     - Will creates v1 template
     - Will creates SI with shared IP & Static-Route using v1 Template
     - Will create and attach NW Policy for LEFT and RIGHT VN's.
+
+contrail-in-network-nat-sc-v2.yaml
+
+    - Will create 3 VM using exiting Virtual Network
+    - Will create Service Template V2
+    - Will create Port Tuple based SI
+    - Will enable ECMP hashing
