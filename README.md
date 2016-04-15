@@ -92,3 +92,8 @@ contrail-in-network-nat-sc-v2.yaml
     - Will create Service Template V2
     - Will create Port Tuple based SI
     - Will enable ECMP hashing
+
+contrail-vm-v4v6.yaml
+
+    - Will create a VM using exiting Virtual Network that has v4 and v6 subnets.
+
