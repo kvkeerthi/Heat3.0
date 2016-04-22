@@ -97,6 +97,10 @@ contrail-vm-v4v6.yaml
 
     - Will create a VM using exiting Virtual Network that has v4 and v6 subnets.
 
+contrail-sc-v4v6.yaml
+
+    - Will create a SI using exiting Virtual Network that has v4 and v6 subnets.
+
 # Services Templates
 
 contrail-bgp-asaservice.yaml
