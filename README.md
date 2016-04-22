@@ -29,7 +29,7 @@ vn-with-policy.yaml
 
     - Will create Virtual Network with Network Policy
 
-# V1 and V2 Templates
+# V1 and V2 SI Templates
 
 contrail-sc-v1.yaml            
 
@@ -97,3 +97,8 @@ contrail-vm-v4v6.yaml
 
     - Will create a VM using exiting Virtual Network that has v4 and v6 subnets.
 
+# Services Templates
+
+contrail-bgp-asaservice.yaml
+
+    - Will create BGP as a service for an exiting VMI
