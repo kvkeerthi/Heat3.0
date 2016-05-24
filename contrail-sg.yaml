@@ -1,0 +1,295 @@
+heat_template_version: 2015-04-30
+
+description: >
+  HOT template to create a SecurityGroup:
+
+parameters:
+  name:
+    type: string
+    description: name for the SecurityGroup
+  display_name:
+    type: string
+    description: display_name for the SecurityGroup
+# Ingress Rule
+
+  sg_rule_protocol:
+    type: string
+    description: protocol for the SecurityGroup
+  sctp_rule_protocol:
+    type: string
+    description: protocol for the SecurityGroup
+  src_start_port:
+    type: number
+    description: start_port for the SecurityGroup
+  src_end_port:
+    type: number
+    description: end_port for the SecurityGroup
+  sg_rule_application:
+    type: string
+    description: application for the SecurityGroup
+  dst_start_port:
+    type: number
+    description: start_port for the SecurityGroup
+  dst_end_port:
+    type: number
+    description: end_port for the SecurityGroup
+  sg_ethertype:
+    type: string
+    description: ethertype for the SecurityGroup
+  sg_dst_addresses:
+    type: string
+    description: security_group for the SecurityGroup
+  src_subnet_prefix:
+    type: string
+    description: ip_prefix for the SecurityGroup
+  src_subnet_prefix_v6:
+    type: string
+    description: ip_prefix for the SecurityGroup
+  src_subnet_prefix_len:
+    type: number
+    description: ip_prefix_len for the SecurityGroup
+  sg_action:
+    type: string
+    description: simple_action for the SecurityGroup
+
+# Egress Rule
+
+  egress_rule_protocol:
+    type: string
+    description: protocol for the SecurityGroup
+  egress_src_start_port:
+    type: number
+    description: start_port for the SecurityGroup
+  egress_src_end_port:
+    type: number
+    description: end_port for the SecurityGroup
+  egress_rule_application:
+    type: string
+    description: application for the SecurityGroup
+  egress_dst_start_port:
+    type: number
+    description: start_port for the SecurityGroup
+  egress_dst_end_port:
+    type: number
+    description: end_port for the SecurityGroup
+  egress_dst_subnet_prefix:
+    type: string
+    description: ip_prefix for the SecurityGroup
+  egress_dst_subnet_prefix_v6:
+    type: string
+    description: ip_prefix for the SecurityGroup
+  egress_dst_subnet_prefix_len:
+    type: number
+    description: ip_prefix_len for the SecurityGroup
+  egress_ethertype:
+    type: string
+    description: ethertype for the SecurityGroup
+  egress_src_addresses:
+    type: string
+    description: security_group for the SecurityGroup
+  egress_action:
+    type: string
+    description: simple_action for the SecurityGroup
+# IPv6 Rule
+  IPv6_ethertype:
+    type: string
+    description: ethertype for the SecurityGroup
+
+resources:
+  template_SecurityGroup:
+    type: OS::Contrail::SecurityGroup
+    properties:
+      name: { get_param: name }
+      display_name: { get_param: display_name }
+      security_group_entries:
+        {
+          security_group_entries_policy_rule:
+            [{
+              security_group_entries_policy_rule_protocol: { get_param: sg_rule_protocol },
+              security_group_entries_policy_rule_src_addresses:
+                [{
+                  security_group_entries_policy_rule_src_addresses_subnet:
+                    {
+                      security_group_entries_policy_rule_src_addresses_subnet_ip_prefix: { get_param: src_subnet_prefix },
+                      security_group_entries_policy_rule_src_addresses_subnet_ip_prefix_len: { get_param: src_subnet_prefix_len },
+                    },
+                }],
+              security_group_entries_policy_rule_src_ports:
+                [{
+                  security_group_entries_policy_rule_src_ports_start_port: { get_param: src_start_port },
+                  security_group_entries_policy_rule_src_ports_end_port: { get_param: src_end_port },
+                }],
+              security_group_entries_policy_rule_application: [{ get_param: sg_rule_application }],
+              security_group_entries_policy_rule_dst_addresses:
+                [{
+                  security_group_entries_policy_rule_dst_addresses_security_group: { get_param: sg_dst_addresses },
+                 }],
+              security_group_entries_policy_rule_dst_ports:
+                [{
+                  security_group_entries_policy_rule_dst_ports_start_port: { get_param: dst_start_port },
+                  security_group_entries_policy_rule_dst_ports_end_port: { get_param: dst_end_port },
+                }],
+              security_group_entries_policy_rule_action_list:
+                {
+                  security_group_entries_policy_rule_action_list_simple_action: { get_param: sg_action },
+                },
+              security_group_entries_policy_rule_ethertype: { get_param: sg_ethertype },
+            },
+            {
+              security_group_entries_policy_rule_protocol: { get_param: egress_rule_protocol },
+              security_group_entries_policy_rule_src_addresses:
+                [{
+                  security_group_entries_policy_rule_src_addresses_security_group: { get_param: egress_src_addresses },
+                }],
+              security_group_entries_policy_rule_src_ports:
+                [{
+                  security_group_entries_policy_rule_src_ports_start_port: { get_param: egress_src_start_port },
+                  security_group_entries_policy_rule_src_ports_end_port: { get_param: egress_src_end_port },
+                }],
+              security_group_entries_policy_rule_application: [{ get_param: egress_rule_application }],
+              security_group_entries_policy_rule_dst_addresses:
+                [{
+                  security_group_entries_policy_rule_dst_addresses_subnet:
+                    {
+                      security_group_entries_policy_rule_dst_addresses_subnet_ip_prefix: { get_param: egress_dst_subnet_prefix },
+                      security_group_entries_policy_rule_dst_addresses_subnet_ip_prefix_len: { get_param: egress_dst_subnet_prefix_len },
+                    },
+                 }],
+              security_group_entries_policy_rule_dst_ports:
+                [{
+                  security_group_entries_policy_rule_dst_ports_start_port: { get_param: egress_dst_start_port },
+                  security_group_entries_policy_rule_dst_ports_end_port: { get_param: egress_dst_end_port },
+                }],
+              security_group_entries_policy_rule_action_list:
+                {
+                  security_group_entries_policy_rule_action_list_simple_action: { get_param: egress_action },
+                },
+              security_group_entries_policy_rule_ethertype: { get_param: egress_ethertype },
+            },
+# SCTP Rule
+            {
+              security_group_entries_policy_rule_protocol: { get_param: sctp_rule_protocol },
+              security_group_entries_policy_rule_src_addresses:
+                [{
+                  security_group_entries_policy_rule_src_addresses_subnet:
+                    {
+                      security_group_entries_policy_rule_src_addresses_subnet_ip_prefix: { get_param: src_subnet_prefix },
+                      security_group_entries_policy_rule_src_addresses_subnet_ip_prefix_len: { get_param: src_subnet_prefix_len },
+                    },
+                }],
+              security_group_entries_policy_rule_src_ports:
+                [{
+                  security_group_entries_policy_rule_src_ports_start_port: { get_param: src_start_port },
+                  security_group_entries_policy_rule_src_ports_end_port: { get_param: src_end_port },
+                }],
+              security_group_entries_policy_rule_application: [{ get_param: sg_rule_application }],
+              security_group_entries_policy_rule_dst_addresses:
+                [{
+                  security_group_entries_policy_rule_dst_addresses_security_group: { get_param: sg_dst_addresses },
+                 }],
+              security_group_entries_policy_rule_dst_ports:
+                [{
+                  security_group_entries_policy_rule_dst_ports_start_port: { get_param: dst_start_port },
+                  security_group_entries_policy_rule_dst_ports_end_port: { get_param: dst_end_port },
+                }],
+              security_group_entries_policy_rule_action_list:
+                {
+                  security_group_entries_policy_rule_action_list_simple_action: { get_param: sg_action },
+                },
+              security_group_entries_policy_rule_ethertype: { get_param: sg_ethertype },
+            },
+            {
+              security_group_entries_policy_rule_protocol: { get_param: sctp_rule_protocol },
+              security_group_entries_policy_rule_src_addresses:
+                [{
+                  security_group_entries_policy_rule_src_addresses_security_group: { get_param: egress_src_addresses },
+                }],
+              security_group_entries_policy_rule_src_ports:
+                [{
+                  security_group_entries_policy_rule_src_ports_start_port: { get_param: egress_src_start_port },
+                  security_group_entries_policy_rule_src_ports_end_port: { get_param: egress_src_end_port },
+                }],
+              security_group_entries_policy_rule_application: [{ get_param: egress_rule_application }],
+              security_group_entries_policy_rule_dst_addresses:
+                [{
+                  security_group_entries_policy_rule_dst_addresses_subnet:
+                    {
+                      security_group_entries_policy_rule_dst_addresses_subnet_ip_prefix: { get_param: egress_dst_subnet_prefix },
+                      security_group_entries_policy_rule_dst_addresses_subnet_ip_prefix_len: { get_param: egress_dst_subnet_prefix_len },
+                    },
+                 }],
+              security_group_entries_policy_rule_dst_ports:
+                [{
+                  security_group_entries_policy_rule_dst_ports_start_port: { get_param: egress_dst_start_port },
+                  security_group_entries_policy_rule_dst_ports_end_port: { get_param: egress_dst_end_port },
+                }],
+              security_group_entries_policy_rule_action_list:
+                {
+                  security_group_entries_policy_rule_action_list_simple_action: { get_param: egress_action },
+                },
+              security_group_entries_policy_rule_ethertype: { get_param: egress_ethertype },
+            },
+#IPv6 Rule
+            {
+              security_group_entries_policy_rule_protocol: { get_param: sg_rule_protocol },
+              security_group_entries_policy_rule_src_addresses:
+                [{
+                  security_group_entries_policy_rule_src_addresses_subnet:
+                    {
+                      security_group_entries_policy_rule_src_addresses_subnet_ip_prefix: { get_param: src_subnet_prefix_v6 },
+                      security_group_entries_policy_rule_src_addresses_subnet_ip_prefix_len: { get_param: src_subnet_prefix_len },
+                    },
+                }],
+              security_group_entries_policy_rule_src_ports:
+                [{
+                  security_group_entries_policy_rule_src_ports_start_port: { get_param: src_start_port },
+                  security_group_entries_policy_rule_src_ports_end_port: { get_param: src_end_port },
+                }],
+              security_group_entries_policy_rule_application: [{ get_param: sg_rule_application }],
+              security_group_entries_policy_rule_dst_addresses:
+                [{
+                  security_group_entries_policy_rule_dst_addresses_security_group: { get_param: sg_dst_addresses },
+                 }],
+              security_group_entries_policy_rule_dst_ports:
+                [{
+                  security_group_entries_policy_rule_dst_ports_start_port: { get_param: dst_start_port },
+                  security_group_entries_policy_rule_dst_ports_end_port: { get_param: dst_end_port },
+                }],
+              security_group_entries_policy_rule_action_list:
+                {
+                  security_group_entries_policy_rule_action_list_simple_action: { get_param: sg_action },
+                },
+              security_group_entries_policy_rule_ethertype: { get_param: IPv6_ethertype },
+            },
+            {
+              security_group_entries_policy_rule_protocol: { get_param: egress_rule_protocol },
+              security_group_entries_policy_rule_src_addresses:
+                [{
+                  security_group_entries_policy_rule_src_addresses_security_group: { get_param: egress_src_addresses },
+                }],
+              security_group_entries_policy_rule_src_ports:
+                [{
+                  security_group_entries_policy_rule_src_ports_start_port: { get_param: egress_src_start_port },
+                  security_group_entries_policy_rule_src_ports_end_port: { get_param: egress_src_end_port },
+                }],
+              security_group_entries_policy_rule_application: [{ get_param: egress_rule_application }],
+              security_group_entries_policy_rule_dst_addresses:
+                [{
+                  security_group_entries_policy_rule_dst_addresses_subnet:
+                    {
+                      security_group_entries_policy_rule_dst_addresses_subnet_ip_prefix: { get_param: egress_dst_subnet_prefix_v6 },
+                      security_group_entries_policy_rule_dst_addresses_subnet_ip_prefix_len: { get_param: egress_dst_subnet_prefix_len },
+                    },
+                 }],
+              security_group_entries_policy_rule_dst_ports:
+                [{
+                  security_group_entries_policy_rule_dst_ports_start_port: { get_param: egress_dst_start_port },
+                  security_group_entries_policy_rule_dst_ports_end_port: { get_param: egress_dst_end_port },
+                }],
+              security_group_entries_policy_rule_action_list:
+                {
+                  security_group_entries_policy_rule_action_list_simple_action: { get_param: egress_action },
+                },
+              security_group_entries_policy_rule_ethertype: { get_param: IPv6_ethertype },
+            }],
+        }
