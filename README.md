@@ -2,7 +2,11 @@
 
 # YAML Templates
 
-# VN's and Policy Templates
+# VN's, SG's and Policy Templates
+
+contrail-sg.yaml
+    - Will allow to create SG
+    - Will allow to create v4 & v6 rules along with SCTP rule
 
 contrail-vn-v4v6.yaml
 
